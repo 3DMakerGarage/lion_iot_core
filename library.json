@@ -1,0 +1,25 @@
+{
+    "name": "Lion IoT Core",
+    "version": "1.5.1",
+    "description": "Lion IoT Core library. Use this library to get access to default configuration.",
+    "keywords": "lion, iot",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/txusballesteros/lion_iot_core.git"
+    },
+    "authors": [
+      {
+        "name": "3D Maker Garage",
+        "email": "3dmakergarage@gmail.com",
+        "url": "https://lion-iot.com",
+        "maintainer": true
+      }
+    ],
+    "license": "MIT",
+    "frameworks": "arduino",
+    "platforms": ["espressif8266"],
+    "dependencies": {
+      "adafruit/Adafruit GFX Library": "^1.10.13",
+      "adafruit/Adafruit SSD1306": "^2.5.10"
+    }
+  }
