@@ -23,13 +23,30 @@
  * Contact: 3dmakergarage@gmail.com
  */
 
-#include <Lion.h>
+#include <Deferred.h>
 
-void Lion::begin() {
-    touchButtons_begin();
-    display_begin();
+Deferred::Deferred(unsigned int executeEveryMS) {
+    deferredPeriod = executeEveryMS;
 }
 
-void Lion::loop() {
-    touchButtons_loop();
+boolean Deferred::doExecute() {
+    unsigned long currentTime = millis();
+    unsigned long timeDifference = currentTime - lastExecutionTime;
+    if (timeDifference >= deferredPeriod) {
+        lastExecutionTime = currentTime;
+        return true;
+    }
+    return false;
+}
+
+void Deferred::execute(DeferredCallback callback) {
+    if (doExecute()) {
+        callback();
+    }
+}
+
+void Deferred::execute(OnDeferredExecutionCallback *owner) {
+    if (doExecute()) {
+        owner->onDeferredExecution();
+    }
 }
