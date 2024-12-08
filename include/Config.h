@@ -23,23 +23,9 @@
  * Contact: 3dmakergarage@gmail.com
  */
 
-#include <Lion.h>
+#ifndef CONFIG_H
+#define CONFIG_H
 
-void Lion::begin() {
-    touchButtons_begin();
-    display_begin();
+#define DISPLAY_LOGO
 
-    #ifdef DISPLAY_LOGO
-        displayLogo();
-    #endif
-}
-
-void Lion::loop() {
-    touchButtons_loop();
-}
-
-void Lion::displayLogo() {
-    display_drawLogo();
-    display_draw();
-    delay(2000);
-}
+#endif

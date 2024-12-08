@@ -1,3 +1,28 @@
+/*
+ * Copyright 3D Maker Garage 2024
+ *
+ * This file is part of some open source application.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *
+ * Contact: 3dmakergarage@gmail.com
+ */
+
 #include <Display.h>
 
 const unsigned char logo [] PROGMEM = {
@@ -71,7 +96,7 @@ Display::Display() {
     SSD1306 = Adafruit_SSD1306(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 }
 
-void Display::begin() {
+void Display::display_begin() {
     if (SSD1306.begin(SSD1306_SWITCHCAPVCC, SCREEN_I2C_ADDRESS)) {
         SSD1306.clearDisplay();
         SSD1306.setTextSize(3);
@@ -83,77 +108,100 @@ void Display::begin() {
     }
 }
 
-void Display::drawLogo() {
+void Display::display_drawLogo() {
     SSD1306.drawBitmap(0, 0, logo, 128, 64, BLACK, WHITE);
 }
 
-void Display::clear() {
+void Display::display_clear() {
     SSD1306.clearDisplay();
 }
 
-void Display::setBrightness(int8 value) {
+void Display::display_setBrightness(int8 value) {
     SSD1306.ssd1306_command(SSD1306_SETCONTRAST);
     SSD1306.ssd1306_command(value);
     delay(100);
 }
 
-void Display::writeText(String text) {
-    Display::writeText(0, 0, DEFAULT_TEXT_SIZE, text);
+void Display::display_writeText(String text) {
+    Display::display_writeText(0, 0, DEFAULT_TEXT_SIZE, text);
  }
 
-void Display::writeText(int16_t x, int16_t y, String text) {
-    Display::writeText(x, y, DEFAULT_TEXT_SIZE, text);
+void Display::display_writeText(int16_t x, int16_t y, String text) {
+    Display::display_writeText(x, y, DEFAULT_TEXT_SIZE, text);
 }
 
-void Display::writeText(int16_t x, int16_t y, int16_t size, String text) {
+void Display::display_writeText(int16_t x, int16_t y, int16_t size, String text) {
     SSD1306.setCursor(x, y);
     SSD1306.setTextSize(size);
     SSD1306.println(text);
 }
 
-uint16_t Display::getTextBounds(int16_t *size, String *text) {
+void Display::display_getTextBounds(int16_t *size, String *text, uint16_t *textWidth, uint16_t *textHeight) {
     int16_t centeredX;
     int16_t centeredY;
-    uint16_t textWidth;
-    uint16_t textHeight;
     SSD1306.setTextSize(*size);
-    SSD1306.getTextBounds(*text, 0, 0, &centeredX, &centeredY, &textWidth, &textHeight);
-    return textWidth;
+    SSD1306.getTextBounds(*text, 0, 0, &centeredX, &centeredY, textWidth, textHeight);
 }
 
-void Display::writeAlignedText(int16_t y, int16_t size, HorizontalAlignment alignment, String text) {
-    if (alignment == HorizontalAlignment::CENTER) {
-        uint16_t textWidth = getTextBounds(&size, &text);
-        int16_t x = ((DISPLAY_WIDTH - textWidth) / 2);
-        writeText(x, y, size, text);
-    } else if (alignment == HorizontalAlignment::RIGHT) {
-        uint16_t textWidth = getTextBounds(&size, &text);
-        int16_t x = (DISPLAY_WIDTH - textWidth);
-        writeText(x, y, size, text);
-    } else if (alignment == HorizontalAlignment::LEFT) {
-        writeText(0, y, size, text);
-    }
+void Display::display_writeAlignedText(int16_t size, String text) {
+	display_writeAlignedText(CENTER, MIDDLE, size, text);
 }
 
-void Display::writeText(char character) {
-    Display::writeText(0, 0, DEFAULT_TEXT_SIZE, character);
+void Display::display_writeAlignedText(
+	HorizontalAlignment horizonatlAlignment,
+	VerticalAlignment verticalAlignment, 
+	int16_t size,
+	String text
+) {
+	int16_t x;
+	int16_t y;
+	uint16_t textWidth;
+	uint16_t textHeight;
+	display_getTextBounds(&size, &text, &textWidth, &textHeight);
+	switch (horizonatlAlignment) {
+		case HorizontalAlignment::CENTER:
+			x = ((DISPLAY_WIDTH - textWidth) / 2);
+			break;
+		case HorizontalAlignment::RIGHT:
+			x = (DISPLAY_WIDTH - textWidth);
+			break;
+		default:
+			x = 0;
+			break;
+	}
+	switch (verticalAlignment) {
+		case VerticalAlignment::MIDDLE:
+			y = ((DISPLAY_HEIGHT - textHeight) / 2);
+			break;
+		case VerticalAlignment::BOTTOM:
+			y = (DISPLAY_HEIGHT - textHeight);
+			break;
+		default:
+			y = 0;
+			break;
+	}
+	display_writeText(x, y, size, text);
+}
+		
+void Display::display_writeText(char character) {
+    Display::display_writeText(0, 0, DEFAULT_TEXT_SIZE, character);
  }
 
-void Display::writeText(int16_t x, int16_t y, char character) {
-    Display::writeText(x, y, DEFAULT_TEXT_SIZE, character);
+void Display::display_writeText(int16_t x, int16_t y, char character) {
+    Display::display_writeText(x, y, DEFAULT_TEXT_SIZE, character);
 }
 
-void Display::writeText(int16_t x, int16_t y, int16_t size, char character) {
+void Display::display_writeText(int16_t x, int16_t y, int16_t size, char character) {
     SSD1306.setCursor(x, y);
     SSD1306.setTextSize(size);
     SSD1306.print(character);
 }
 
-void Display::drawPixel(int16_t x, int16_t y) {
+void Display::display_drawPixel(int16_t x, int16_t y) {
     SSD1306.drawPixel(x, y, WHITE);
 }
 
-void Display::drawFile(String filePath, int x, int y, int width, int height) {
+void Display::display_drawFile(String filePath, int x, int y, int width, int height) {
     int imageSizeInBytes = ((width * height) / 8);
     uint8_t originBuffer[imageSizeInBytes];
     readFile(filePath, originBuffer);
@@ -162,7 +210,7 @@ void Display::drawFile(String filePath, int x, int y, int width, int height) {
     SSD1306.drawBitmap(x, y, (const uint8_t*)originBuffer, DISPLAY_WIDTH, DISPLAY_HEIGHT, WHITE);
 }
 
-void Display::draw() {
+void Display::display_draw() {
     SSD1306.display();
 }
 
@@ -177,20 +225,20 @@ void Display::readFile(String filePath, uint8_t* buffer, int size) {
     file.close();
 }
 
-void Display::turnOn() {
+void Display::display_turnOn() {
     SSD1306.ssd1306_command(SSD1306_DISPLAYON);
     delay(100);
 }
 
-void Display::turnOff() {
+void Display::display_turnOff() {
     SSD1306.ssd1306_command(SSD1306_DISPLAYOFF);
     delay(100);
 }
 
-void Display::drawRoundedRect(int x, int y, int width, int height, int radious) {
+void Display::display_drawRoundedRect(int x, int y, int width, int height, int radious) {
     SSD1306.drawRoundRect(x, y, width, height, radious, WHITE);
 }
 
-void Display::fillRoundedRect(int x, int y, int width, int height, int radious) {
+void Display::display_fillRoundedRect(int x, int y, int width, int height, int radious) {
     SSD1306.fillRoundRect(x, y, width, height, radious, WHITE);
 }

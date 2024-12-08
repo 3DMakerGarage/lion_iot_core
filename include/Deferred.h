@@ -23,23 +23,29 @@
  * Contact: 3dmakergarage@gmail.com
  */
 
-#include <Lion.h>
+#ifndef Deferred_h
+#define Deferred_h
 
-void Lion::begin() {
-    touchButtons_begin();
-    display_begin();
+#include <Arduino.h>
 
-    #ifdef DISPLAY_LOGO
-        displayLogo();
-    #endif
-}
+class OnDeferredExecutionCallback {
+    public:
+        virtual void onDeferredExecution();
+};
 
-void Lion::loop() {
-    touchButtons_loop();
-}
+class Deferred {
+    private:
+        unsigned long deferredPeriod = 0;
+        unsigned long lastExecutionTime = 0;
+        boolean doExecute();
 
-void Lion::displayLogo() {
-    display_drawLogo();
-    display_draw();
-    delay(2000);
-}
+    public:
+        typedef void(*DeferredCallback)();
+        
+        Deferred(unsigned int executeEveryMS = 100);
+        
+        void execute(DeferredCallback callback);
+        void execute(OnDeferredExecutionCallback *owner);
+};
+
+#endif
