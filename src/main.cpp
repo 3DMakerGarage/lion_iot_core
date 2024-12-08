@@ -67,6 +67,7 @@ void onTouchButtonEvent(TouchButtons::BUTTON button, TouchButtons::BUTTON_EVENT 
 void setup() {
     lion.begin();
     lion.setOnTouchButtonEvent(onTouchButtonEvent);
+    
     displayCounter();
 }
 

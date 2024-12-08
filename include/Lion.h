@@ -30,12 +30,15 @@
 #include <Display.h>
 #include <TouchButtons.h>
 #include <Board.h>
+#include <Config.h>
 
 class Lion : public Display, public TouchButtons {
     public:
         void begin();
         void loop();
-};
 
+    private:
+        void displayLogo();
+};
 
 #endif
