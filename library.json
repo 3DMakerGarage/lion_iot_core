@@ -1,11 +1,11 @@
 {
     "name": "Lion IoT Core",
-    "version": "1.5.1",
+    "version": "2.0.0",
     "description": "Lion IoT Core library. Use this library to get access to default configuration.",
     "keywords": "lion, iot",
     "repository": {
       "type": "git",
-      "url": "https://github.com/txusballesteros/lion_iot_core.git"
+      "url": "https://github.com/3DMakerGarage/lion_iot_core.git"
     },
     "authors": [
       {
